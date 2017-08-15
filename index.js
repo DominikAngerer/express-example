@@ -19,17 +19,17 @@ let Storyblok = new StoryblokClient({
   privateToken: 'a6yDcOOh8puW4Y8YIa7Q7Qtt'
 });
 
-app.get('/', function(req, res) {
+// 3. Define a wilcard route to get the story mathing the url path
+app.get('/*', function(req, res) {
   var path = url.parse(req.url).pathname;
-  console.log(path);
-  path = path == '/' ? 'home' : path;
-  console.log(path);
+  path = path == '/' ? 'home' : path; // this will allow to visit "home" from / only but still allow the editor to access the home "page" on localhost:4300/home
+
   Storyblok
-    .get('stories/home', {
+    .get(`stories/${path}`, { // dynamic variable also here!
       version: req.query._storyblok ? 'draft': 'published'
     })
     .then((response) => {
-      res.render('../pages/home', {
+      res.render('root', { // changed to root because the default root component we created and you can ned is called "root"! Have a look in your components overview: http://app.storyblok.com/#!/me/spaces/40936/components/ 
         story: response.body.story
       });
     })
@@ -38,24 +38,7 @@ app.get('/', function(req, res) {
     });
 });
 
-app.get('/about', function(req, res) {
-  var path = url.parse(req.url).pathname;
-  console.log(path);
-  path = path == '/' ? 'home' : path;
-  console.log(path);
-  Storyblok
-    .get(`stories/${path}`, {
-      version: req.query._storyblok ? 'draft': 'published'
-    })
-    .then((response) => {
-      res.render('../pages/about', {
-        story: response.body.story
-      });
-    })
-    .catch((error) => {
-      res.send(error);
-    });
-});
+
 
 app.use('/public', express.static('public'));
 
