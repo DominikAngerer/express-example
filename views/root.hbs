@@ -1,7 +1,10 @@
-<!-- the default component we create and where you can add new components on the fly is called "root" by default - this also will be rendered first after the layout: index.js line 32 (http://a.storyblok.com/f/40206/x/8e9c92a64b/unbenannt.png) --!>
 {{{ story.content._editable }}}
-<div class="container">
-  {{#each story.content.body}}
-    {{> (lookup . 'component') }}
-  {{/each}}
+<div class="root container">
+	{{#each meganav.body}}
+		{{> (lookup . 'component') }}
+	{{/each}}
+
+	{{#each story.content.body}}
+		{{> (lookup . 'component') }}
+	{{/each}}
 </div>
