@@ -22,6 +22,10 @@ let Storyblok = new StoryblokClient({
   }
 });
 
+Storyblok.get(`links`).then((response) => {
+  app.set('storylinks', response.body.links)
+})
+
 // 3. Define a wilcard route to get the story mathing the url path
 app.get('/*', function(req, res) {
   var path = url.parse(req.url).pathname;
@@ -41,7 +45,8 @@ app.get('/*', function(req, res) {
       .then((response) => {
         res.render(response.body.story.content.component, { // changed to dynamic "base" component -> I've created 2 components "home" and "about" -> Have a look in your components overview: http://app.storyblok.com/#!/me/spaces/40936/components/ 
           story: response.body.story,
-          meganav: meganavData // pass the meganav content to Handlebars
+          meganav: meganavData, // pass the meganav content to Handlebars
+          storylinks: app.get('storylinks') // pass the storylinks as parameters so they are available in the helpers
         });
       })
       .catch((error) => {
